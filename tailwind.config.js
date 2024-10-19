@@ -13,7 +13,7 @@ export default {
         sm: 'calc(var(--radius) - 4px)'
       },
       colors: {
-        background: '#E6F0FF',  // Light cheerful blue
+        background: '#E6F0FF',  // Light blue
         foreground: 'hsl(var(--foreground))',
         card: {
           DEFAULT: 'hsl(var(--card))',
@@ -24,11 +24,11 @@ export default {
           foreground: 'hsl(var(--popover-foreground))'
         },
         primary: {
-          DEFAULT: '#FF007F',  // Vibrant magenta
+          DEFAULT: '#14213D', // navy blue
           foreground: '#FFE6F2'
         },
         secondary: {
-          DEFAULT: '#FFDD00',  // Bright yellow
+          DEFAULT: '#004F2D',  // green
           foreground: '#FFF9CC'
         },
         muted: {
@@ -36,11 +36,11 @@ export default {
           foreground: 'hsl(var(--muted-foreground))'
         },
         accent: {
-          DEFAULT: '#00CCFF',  // Striking cyan
+          DEFAULT: '#763d5e', // purplish  
           foreground: '#E6F9FF'
         },
         destructive: {
-          DEFAULT: '#FF4D4D',  // Fun red for critical actions
+          DEFAULT: '#FF4D4D',  
           foreground: '#FFE6E6'
         },
         border: 'hsl(var(--border))',
