@@ -1,7 +1,7 @@
 import { Button } from '../ui/button'
 function Header() {
   return (
-    <div className='bg-transparent flex items-center justify-between px-16 py-4'>
+    <div className='flex items-center justify-between px-16 py-4 bg-transparent'>
         {/* logo */}
         <div>
             <img
