@@ -39,7 +39,7 @@ export const tripTypeOptions = [
   
   export const budgetOptions = [
     { 
-      id: 'low', 
+      id: 'low - Under $100/day', 
       label: 'Budget', 
       description: 'Under $100/day',
       color: {
@@ -51,7 +51,7 @@ export const tripTypeOptions = [
       }
     },
     { 
-      id: 'medium', 
+      id: 'medium - $100-300/day', 
       label: 'Moderate', 
       description: '$100-300/day',
       color: {
@@ -63,7 +63,7 @@ export const tripTypeOptions = [
       }
     },
     { 
-      id: 'high', 
+      id: 'high - $300+/day', 
       label: 'Luxury', 
       description: '$300+/day',
       color: {
@@ -78,7 +78,7 @@ export const tripTypeOptions = [
   
   export const sizeOptions = [
     { 
-      id: 'personal', 
+      id: 'personal - 1-2 people', 
       label: 'Solo/Couple', 
       description: '1-2 people',
       color: {
@@ -90,7 +90,7 @@ export const tripTypeOptions = [
       }
     },
     { 
-      id: 'family', 
+      id: 'family - 3-6 people', 
       label: 'Family', 
       description: '3-6 people',
       color: {
@@ -102,7 +102,7 @@ export const tripTypeOptions = [
       }
     },
     { 
-      id: 'team', 
+      id: 'team - 7+ people', 
       label: 'Group', 
       description: '7+ people',
       color: {
@@ -134,7 +134,7 @@ export const tripTypeOptions = [
         message: "Trip must be at least 1 day"
       },
       max: {
-        value: 90,
+        value: 5,
         message: "Trip cannot exceed 90 days"
       }
     },

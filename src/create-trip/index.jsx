@@ -3,11 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Plane } from "lucide-react";
+import { Loader2, Plane } from "lucide-react";
 import { tripSchema, tripTypeOptions, budgetOptions, sizeOptions } from '../utils/Validator';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import { RadioOptionCard } from '@/components/custom/RadioOptions';
 import { toast } from 'sonner';
+import { AIPROMPT } from '@/components/custom/Prompt';
+import { chatSession } from '@/config/CreatePrompt';
 
 const CreateTrip = () => {
   const [place, setPlace] = useState(null);
@@ -58,8 +60,8 @@ const CreateTrip = () => {
 
   const handlePlaceSelect = (selectedPlace) => {
     setPlace(selectedPlace);
-    setFormData(prev => ({ 
-      ...prev, 
+    setFormData(prev => ({
+      ...prev,
       destination: selectedPlace?.label || ''
     }));
     const error = validateField('destination', selectedPlace?.label || '');
@@ -92,7 +94,19 @@ const CreateTrip = () => {
         budget: '',
         size: ''
       });
-      setPlace(null);
+
+      const FINAL_PROMPT = AIPROMPT
+        .replace('{destination}', formData.destination)
+        .replace('{days}', formData.days)
+        .replace('{tripType}', formData.tripType)
+        .replace('{budget}', formData.budget)
+        .replace('{size}', formData.size);
+
+      const result = await chatSession.sendMessage(FINAL_PROMPT)
+
+      console.log(result?.response?.text())
+
+      // setPlace(null);
     } catch (error) {
       console.error('Submission error:', error);
     } finally {
@@ -115,7 +129,7 @@ const CreateTrip = () => {
           <div className="flex flex-col w-full space-y-2">
             <Label htmlFor="destination">Destination</Label>
             <GooglePlacesAutocomplete
-              apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY} 
+              apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
               selectProps={{
                 value: place,
                 onChange: handlePlaceSelect,
@@ -129,7 +143,6 @@ const CreateTrip = () => {
             )}
           </div>
 
-          {/* Rest of the form remains the same */}
           {/* Days */}
           <div className="space-y-2">
             <Label htmlFor="days">Number of Days</Label>
@@ -218,7 +231,7 @@ const CreateTrip = () => {
             className="w-full bg-secondary hover:bg-secondary"
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Creating Trip...' : <h2 className='flex items-center gap-2'><Plane className='animate-bounce'/>Create Trip</h2>}
+            {isSubmitting ? <h2 className='flex items-center gap-2'><Loader2 className='animate-spin' />Create Trip...</h2> : <h2 className='flex items-center gap-2'><Plane className='animate-bounce' />Create Trip</h2>}
           </Button>
         </form>
       </div>
