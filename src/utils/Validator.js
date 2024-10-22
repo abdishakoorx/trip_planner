@@ -135,7 +135,7 @@ export const tripTypeOptions = [
       },
       max: {
         value: 5,
-        message: "Trip cannot exceed 90 days"
+        message: "Trip cannot exceed 5 days"
       }
     },
     tripType: {

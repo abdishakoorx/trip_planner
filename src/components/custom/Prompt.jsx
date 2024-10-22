@@ -1,163 +1,115 @@
-export const AIPROMPT = `Generate travel plan for the destination: {destination}, for days: {days}, for trip type: {tripType}, for budget: {budget}, for group size of: {size}. 
+export const AIPROMPT = `Generate travel plan for the destination: {destination}, for days: {days}, for trip type: {tripType}, for budget: {budget}, for group size of: {size}.
 
-Return a detailed travel guide in JSON format that includes:
+Return a focused travel guide in JSON format that includes:
 
-1. Destination overview with:
+1. Destination Essentials:
 - Full destination name and country
-- Exact geo coordinates and timezone
-- Best times to visit with weather info for each season
-- Local currency and current exchange rates
-- Language(s) spoken
-- Visa requirements
-- Local transportation options
-- Emergency numbers
-- Current travel advisories
+- Geo coordinates
+- Best time to visit
+- Local currency
+- Language
+- Must-know travel tips
 
-2. Budget breakdown showing:
-- Average daily costs for your specified budget level
-- Estimated total trip cost
-- Cost-saving tips
-- Typical prices for:
-  * Meals (breakfast, lunch, dinner)
-  * Transportation
-  * Activities
-  * Shopping
-  * Entertainment
-
-3. Accommodation recommendations (3 options) matching the budget level with:
+2. Accommodations (top 3 options):
 - Hotel name
-- Full address
-- Price per night
-- Star rating
-- Guest rating (out of 5)
-- High-quality image URLs
-- Exact geo coordinates
-- Top 3 amenities
-- Distance from city center
-- Special features
-- Booking tips
+- Address
+- Price range
+- Rating
+- Image URL
+- Coordinates
 
-4. Day-by-day itinerary for the specified number of days, each containing:
-- 3-4 activities per day
-- For each activity:
+3. Daily Itinerary:
+- 2-3 main activities per day
+For each activity:
   * Place name
-  * Description
+  * Brief description
   * Address
   * Opening hours
-  * Entrance fees
-  * Booking requirements
-  * Best time to visit
-  * Average visit duration
-  * Travel time from previous location
-  * Geo coordinates
-  * Rating (out of 5)
-  * Image URLs
-  * Insider tips
-  * Nearby food options
+  * Entry cost
+  * Image URL
+  * Coordinates
+  * Time needed
 
-5. Restaurant recommendations (5 options) matching the budget with:
+4. Food Guide (3 options):
 - Restaurant name
 - Cuisine type
 - Price range
-- Special dishes to try
-- Address
-- Opening hours
+- Location
+- Must-try dish
 - Rating
-- Must-try menu items
-- Reservation requirements
-- Dress code if any
 
-6. Transportation guide including:
-- Best ways to get around
-- Public transport passes and costs
-- Walking/cycling possibilities
-- Taxi/rideshare estimates
-- Airport transfer options
-- Transport apps to download
+5. Getting Around:
+- Best transport option
+- Estimated daily cost
+- Airport transfer tips
 
-7. Essential tips covering:
-- Local customs
-- Tipping practices
-- Safety information
-- Weather-appropriate clothing
-- Important phrases
-- Money-saving hacks
-- Best photo spots
-- Local apps to download
-
-8. Entertainment options suitable for the group size and trip type:
-- Cultural activities
-- Nightlife recommendations
-- Shows and performances
-- Special events during visit
-- Shopping areas
-- Local markets
-- Parks and recreation
-- Unique experiences
-
-Return the response in the following JSON structure:
+Return in this JSON structure:
 
 {
   "destination": {
     "name": "",
     "country": "",
     "coordinates": {
-      "latitude": "",
-      "longitude": ""
+      "lat": "",
+      "lng": ""
     },
-    "overview": {},
-    "practicalInfo": {}
+    "basics": {
+      "currency": "",
+      "language": "",
+      "bestTime": "",
+      "tips": []
+    }
   },
-  "budget": {
-    "summary": {},
-    "breakdown": {},
-    "tips": []
-  },
-  "accommodations": [
+  "hotels": [
     {
       "name": "",
-      "details": {},
-      "location": {},
-      "pricing": {},
-      "images": []
+      "address": "",
+      "price": "",
+      "rating": "",
+      "coordinates": {
+        "lat": "",
+        "lng": ""
+      },
+      "imageUrl": ""
     }
   ],
   "itinerary": {
-    "summary": "",
     "dayPlans": [
       {
         "day": 1,
         "activities": [
           {
             "name": "",
-            "details": {},
-            "location": {},
-            "timing": {},
-            "images": []
+            "description": "",
+            "address": "",
+            "hours": "",
+            "cost": "",
+            "duration": "",
+            "coordinates": {
+              "lat": "",
+              "lng": ""
+            },
+            "imageUrl": ""
           }
         ]
       }
     ]
   },
-  "dining": {
-    "highlights": [],
-    "restaurants": []
-  },
-  "transportation": {
-    "options": [],
-    "costs": {},
-    "tips": []
-  },
-  "essentialTips": {
-    "cultural": [],
-    "practical": [],
-    "safety": []
-  },
-  "entertainment": {
-    "activities": [],
-    "events": [],
-    "shopping": []
+  "dining": [
+    {
+      "name": "",
+      "type": "",
+      "price": "",
+      "location": "",
+      "specialty": "",
+      "rating": ""
+    }
+  ],
+  "transport": {
+    "mainOption": "",
+    "dailyCost": "",
+    "airportTransfer": ""
   }
 }
 
-Ensure all recommendations match the specified trip type ({tripType}), budget level ({budget}), and are suitable for the group size ({size}). Optimize the itinerary for {days} days, including sufficient breaks and accounting for travel time between locations.`
+Ensure all suggestions match the specified trip type ({tripType}), budget level ({budget}), and group size ({size}). Plan for {days} days with realistic timing between locations.`

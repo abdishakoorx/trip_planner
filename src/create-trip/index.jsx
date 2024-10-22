@@ -10,6 +10,17 @@ import { RadioOptionCard } from '@/components/custom/RadioOptions';
 import { toast } from 'sonner';
 import { AIPROMPT } from '@/components/custom/Prompt';
 import { chatSession } from '@/config/CreatePrompt';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+} from "@/components/ui/dialog"
+import { DialogTitle } from '@radix-ui/react-dialog';
+import { useGoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
+
+
 
 const CreateTrip = () => {
   const [place, setPlace] = useState(null);
@@ -23,6 +34,50 @@ const CreateTrip = () => {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => {
+      GetUserProfile(codeResponse)
+        .catch(error => {
+          console.error('Login error:', error);
+          toast.error('Login failed. Please try again.');
+        });
+    },
+    onError: (error) => {
+      console.error('Google login error:', error);
+      toast.error('Google login failed. Please try again.');
+    }
+  });
+
+  const GetUserProfile = async (tokenInfo) => {
+    try {
+      const response = await axios.get(
+        `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo.access_token}`,
+        {
+          headers: {
+            Authorization: `Bearer ${tokenInfo.access_token}`,
+            Accept: 'application/json'
+          }
+        }
+      );
+      
+      // Store user data in localStorage
+      localStorage.setItem('user', JSON.stringify(response.data));
+      
+      // Close the dialog after successful login
+      setOpenDialog(false);
+      
+      // Show success message
+      toast.success('Successfully logged in!');
+      
+      return response.data;
+    } catch (error) {
+      console.error('Authentication error:', error);
+      toast.error('Failed to login. Please try again.');
+      throw error;
+    }
+  };
 
   const validateField = (name, value) => {
     const fieldSchema = tripSchema[name];
@@ -83,6 +138,14 @@ const CreateTrip = () => {
       setIsSubmitting(false);
       return;
     }
+
+    const user = localStorage.getItem('user')
+
+    if (!user) {
+      setOpenDialog(true)
+      return
+    }
+
 
     try {
       console.log('Form submitted:', formData);
@@ -235,6 +298,29 @@ const CreateTrip = () => {
           </Button>
         </form>
       </div>
+
+      <Dialog open={openDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              <img
+                src='/logo1.png'
+                alt='logo'
+                className='h-10 w-60'
+              /></DialogTitle>
+            <DialogDescription>
+              <Button className='w-full mt-8' onClick={login}>
+                <img src='/google.svg'
+                  alt='logo'
+                  className='w-6 h-6'
+                />
+                Continue with Google
+              </Button>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+
     </div>
   );
 };
