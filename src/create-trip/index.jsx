@@ -21,6 +21,8 @@ import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '@/config/Firebase';
+import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -37,6 +39,8 @@ const CreateTrip = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+
+  const router = useNavigate()
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => {
@@ -150,7 +154,6 @@ const CreateTrip = () => {
 
 
     try {
-      toast.success('Trip created')
       setFormData({
         destination: '',
         days: '',
@@ -167,22 +170,27 @@ const CreateTrip = () => {
         .replace('{size}', formData.size);
 
       const result = await chatSession.sendMessage(FINAL_PROMPT)
-     
-      const SaveTrip = async(TripInfo) => {
+
+      const docID = uuidv4();
+
+      const SaveTrip = async (TripInfo, documentId) => {
         const user = JSON.parse(localStorage.getItem('user'));
         const now = new Date();
-        const docID = now.toLocaleString("en-US", { timeZone: "Africa/Nairobi" });
+        const date = now.toLocaleString("en-US", { timeZone: "Africa/Nairobi" });
 
-        // Add a new document in collection "cities"
-        await setDoc(doc(db, "Trips", docID), {
+        // Use the passed documentId instead of generating a new one
+        await setDoc(doc(db, "Trips", documentId), {
           userSelection: formData,
           tripInfo: JSON.parse(TripInfo),
           userEmail: user?.email,
-          id: docID
+          date: date,
+          id: documentId
         });
       }
 
-      SaveTrip(result?.response?.text())
+      await SaveTrip(result?.response?.text(), docID)
+      toast.success('Trip created')
+      router('/my-trips/' + docID);
 
       setPlace(null);
     } catch (error) {

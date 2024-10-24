@@ -4,10 +4,11 @@ import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
 import Header from './components/custom/Header';
-import Footer from './components/custom/Footer';
 import CreateTrip from './create-trip';
 import { Toaster } from './components/ui/sonner';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import MyTrips from './my-trips/[tripID]';
+import Footer from './components/custom/Footer';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
     path: "/create-trip",
     element: <CreateTrip />,
   },
+  {
+    path: "/my-trips/:tripID",
+    element: <MyTrips />,
+  },
 ]);
 
 createRoot(document.getElementById('root')).render(
@@ -26,7 +31,7 @@ createRoot(document.getElementById('root')).render(
       <Header />
       <RouterProvider router={router} />
       <Toaster position="bottom-center" />
-      <Footer />
+      <Footer/>
     </GoogleOAuthProvider>
-  </StrictMode>,
+  </StrictMode>
 )
