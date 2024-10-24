@@ -19,6 +19,8 @@ import {
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '@/config/Firebase';
 
 
 
@@ -61,16 +63,16 @@ const CreateTrip = () => {
           }
         }
       );
-      
+
       // Store user data in localStorage
       localStorage.setItem('user', JSON.stringify(response.data));
-      
+
       // Close the dialog after successful login
       setOpenDialog(false);
-      
+
       // Show success message
       toast.success('Successfully logged in!');
-      
+
       return response.data;
     } catch (error) {
       console.error('Authentication error:', error);
@@ -148,7 +150,6 @@ const CreateTrip = () => {
 
 
     try {
-      console.log('Form submitted:', formData);
       toast.success('Trip created')
       setFormData({
         destination: '',
@@ -166,11 +167,26 @@ const CreateTrip = () => {
         .replace('{size}', formData.size);
 
       const result = await chatSession.sendMessage(FINAL_PROMPT)
+     
+      const SaveTrip = async(TripInfo) => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const now = new Date();
+        const docID = now.toLocaleString("en-US", { timeZone: "Africa/Nairobi" });
 
-      console.log(result?.response?.text())
+        // Add a new document in collection "cities"
+        await setDoc(doc(db, "Trips", docID), {
+          userSelection: formData,
+          tripInfo: JSON.parse(TripInfo),
+          userEmail: user?.email,
+          id: docID
+        });
+      }
 
-      // setPlace(null);
+      SaveTrip(result?.response?.text())
+
+      setPlace(null);
     } catch (error) {
+      toast.error('Submission error')
       console.error('Submission error:', error);
     } finally {
       setIsSubmitting(false);
@@ -294,7 +310,7 @@ const CreateTrip = () => {
             className="w-full bg-secondary hover:bg-secondary"
             disabled={isSubmitting}
           >
-            {isSubmitting ? <h2 className='flex items-center gap-2'><Loader2 className='animate-spin' />Create Trip...</h2> : <h2 className='flex items-center gap-2'><Plane className='animate-bounce' />Create Trip</h2>}
+            {isSubmitting ? <h2 className='flex items-center gap-2'><Loader2 className='animate-spin' />Creating Trip...</h2> : <h2 className='flex items-center gap-2'><Plane className='animate-bounce' />Create Trip</h2>}
           </Button>
         </form>
       </div>
