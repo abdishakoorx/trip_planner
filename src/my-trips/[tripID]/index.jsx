@@ -14,7 +14,6 @@ function MyTrips() {
     const docRef = doc(db, "Trips", tripID);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      console.log("Document:", docSnap.data());
       setTrip(docSnap.data())
     }
   }, [tripID]);
@@ -31,10 +30,10 @@ function MyTrips() {
       <Info trip = {trip}/>
 
       {/* Hotels */}
-      <Hotels/>
+      <Hotels trip = {trip}/>
 
       {/* Daily plan */}
-      <Daily/>
+      <Daily trip = {trip}/>
 
     </div>
   )
