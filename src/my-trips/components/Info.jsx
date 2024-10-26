@@ -7,8 +7,42 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Info as InfoIcon } from "lucide-react"
+import { GetPlacesInfo } from "@/config/GlobalApi";
+import { useCallback, useEffect, useState } from "react";
+
+const PHOTO_REF_URL = 'https://places.googleapis.com/v1/{NAME}/media?max_height_px=1000&&max_width_px=1000&key=' + import.meta.env.VITE_GOOGLE_PLACE_API_KEY
 
 function Info({ trip }) {
+    const [photoURL, setphotoURL] = useState(null);
+
+    const getPlacePhotos = useCallback(async () => {
+        if (!trip?.userSelection?.destination) return;
+
+        const data = {
+            textQuery: trip.userSelection.destination,
+            languageCode: "en",  // Add language code
+            maxResultCount: 1    // Limit results
+        };
+
+        try {
+            const result = await GetPlacesInfo(data);
+            // console.log('Places API Response:', result.data.places[0].photos[3].name);
+            const Photo_URL = PHOTO_REF_URL.replace('{NAME}', result.data.places[0].photos[3].name)
+            setphotoURL(Photo_URL)
+        } catch (error) {
+            console.error('Error fetching place photos:', error);
+            if (error.response) {
+                console.error('Error details:', error.response.data);
+            }
+        }
+    }, [trip?.userSelection?.destination]);
+
+    useEffect(() => {
+        if (trip?.userSelection?.destination) {
+            getPlacePhotos();
+        }
+    }, [trip?.userSelection?.destination, getPlacePhotos]);
+
     if (!trip) {
         return (
             <div className="flex items-center justify-center h-[360px]">
@@ -23,7 +57,11 @@ function Info({ trip }) {
 
     return (
         <div>
-            <img src="/travel.jpg" alt="Map" className="h-[360px] w-full object-cover rounded-md" />
+            <img
+                src={photoURL || "/travel.jpg"}
+                alt="Placeholder"
+                className="w-full h-[400px] object-cover rounded-lg"
+            />
 
             <div className="flex flex-col gap-2 mt-3 md:justify-between md:flex-row">
                 <h2 className="text-xl font-semibold text-gray-900">
