@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
     <footer className="py-8 mt-12 bg-gray-800">
-      <div className="container px-4 mx-auto">
+      <div className="px-4 md:px-12 lg:px-16">
         <div className="flex flex-col space-y-8 md:flex-row md:justify-between md:items-center md:space-y-0">
           {/* Logo and Description */}
           <div className="max-w-md space-y-4">

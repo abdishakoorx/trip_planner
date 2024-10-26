@@ -17,7 +17,7 @@ export default function HeroSection() {
           </p>
           <div className="mt-8">
             <Link to={'/create-trip'}>
-              <Button className="bg-secondary/80 text-white hover:bg-secondary/90 border-white/20">
+              <Button className="bg-orange-500 text-white hover:bg-orange-500/80 border-white/20">
                 <PlaneTakeoff className="mr-2 h-5 w-5" />
                 Explore Popular Destinations
               </Button>

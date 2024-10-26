@@ -1,10 +1,46 @@
 /* eslint-disable react/prop-types */
-
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Bus, Car, Clock, DollarSign, MapPin } from 'lucide-react';
+import { useEffect, useState, useCallback } from 'react';
+import { GetPlacesInfo } from "@/config/GlobalApi";
+
+const PHOTO_REF_URL = 'https://places.googleapis.com/v1/{NAME}/media?max_height_px=1000&max_width_px=1000&key=' + import.meta.env.VITE_GOOGLE_PLACE_API_KEY;
 
 const Daily = ({ trip }) => {
+  const [activityPhotos, setActivityPhotos] = useState({});
+
+  const getActivityPhoto = useCallback(async (activityName) => {
+    const data = {
+      textQuery: activityName,
+      languageCode: "en",
+      maxResultCount: 1
+    };
+
+    try {
+      const result = await GetPlacesInfo(data);
+      if (result.data.places[0]?.photos?.length > 0) {
+        const photoUrl = PHOTO_REF_URL.replace('{NAME}', result.data.places[0].photos[0].name);
+        setActivityPhotos(prev => ({
+          ...prev,
+          [activityName]: photoUrl
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching activity photo:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (trip?.tripInfo?.itinerary?.dayPlans) {
+      trip.tripInfo.itinerary.dayPlans.forEach(day => {
+        day.activities.forEach(activity => {
+          getActivityPhoto(activity.name);
+        });
+      });
+    }
+  }, [trip?.tripInfo?.itinerary?.dayPlans, getActivityPhoto]);
+
   return (
     <div className="space-y-8 border-t-2 border-blue-300">
       <h2 className="mt-8 text-3xl font-semibold text-gray-900">Activities</h2>
@@ -15,10 +51,18 @@ const Daily = ({ trip }) => {
 
           <div className="grid gap-6">
             {day.activities.map((activity, index) => (
-              <Card key={index} className="overflow-hidden shadow-none bg-transparen">
+              <Card key={index} className="overflow-hidden transition-shadow bg-transparent hover:shadow-lg">
                 <div className="grid gap-4 md:grid-cols-3">
+                  {/* Activity Image */}
+                  <div className="relative h-64 md:col-span-1">
+                    <img
+                      src={activityPhotos[activity.name] || "/activity.jpg"}
+                      alt={activity.name}
+                      className="object-cover w-full h-full rounded-l-lg"
+                    />
+                  </div>
                   {/* Activity Details */}
-                  <div className="p-6 md:col-span-3">
+                  <div className="p-6 md:col-span-2">
                     <div className="flex items-start justify-between mb-4">
                       <h4 className="text-xl font-semibold text-gray-900">{activity.name}</h4>
                       <Badge variant="secondary" className="px-3 rounded-full bg-accent hover:bg-accent/90">
@@ -52,7 +96,7 @@ const Daily = ({ trip }) => {
         </div>
       ))}
 
-      {/* Transport Information Card */}
+      {/* Transport Information Card - Unchanged */}
       <div className="space-y-8 border-t-2 border-blue-300">
         <h2 className="mt-8 text-3xl font-semibold text-gray-900">Transportation</h2>
         <Card className="overflow-hidden bg-transparent border-0 shadow-none">
@@ -94,7 +138,6 @@ const Daily = ({ trip }) => {
           </CardContent>
         </Card>
       </div>
-
     </div>
   );
 };
