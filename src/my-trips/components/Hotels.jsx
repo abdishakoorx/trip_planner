@@ -3,13 +3,15 @@ import { Star } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from '@/components/ui/badge';
 import { useEffect, useState, useCallback } from 'react';
-import { GetPlacesInfo } from "@/config/GlobalApi";
+import { GetPlacesInfo, PHOTO_REF_URL } from "@/config/GlobalApi";
+import HotelsSkeletonLoader from './HotelsSkeletonLoader';
 
-const PHOTO_REF_URL = 'https://places.googleapis.com/v1/{NAME}/media?max_height_px=1000&max_width_px=1000&key=' + import.meta.env.VITE_GOOGLE_PLACE_API_KEY;
+
 
 const Hotels = ({ trip }) => {
   const [hotelPhotos, setHotelPhotos] = useState({});
   const [restaurantPhotos, setRestaurantPhotos] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const getPlacePhoto = useCallback(async (placeName, type) => {
     const data = {
@@ -40,20 +42,25 @@ const Hotels = ({ trip }) => {
   }, []);
 
   useEffect(() => {
-    // Fetch hotel photos
-    if (trip?.tripInfo?.hotels) {
-      trip.tripInfo.hotels.forEach(hotel => {
-        getPlacePhoto(hotel.name, 'hotel');
-      });
-    }
+    setLoading(true);
+    const fetchAllPhotos = async () => {
+      const hotelPromises = trip?.tripInfo?.hotels?.map(hotel => 
+        getPlacePhoto(hotel.name, 'hotel')
+      ) || [];
+      const restaurantPromises = trip?.tripInfo?.dining?.map(restaurant => 
+        getPlacePhoto(restaurant.name, 'restaurant')
+      ) || [];
+      
+      await Promise.all([...hotelPromises, ...restaurantPromises]);
+      setLoading(false);
+    };
     
-    // Fetch restaurant photos
-    if (trip?.tripInfo?.dining) {
-      trip.tripInfo.dining.forEach(restaurant => {
-        getPlacePhoto(restaurant.name, 'restaurant');
-      });
-    }
+    fetchAllPhotos();
   }, [trip?.tripInfo?.hotels, trip?.tripInfo?.dining, getPlacePhoto]);
+
+  if (loading) {
+    return <HotelsSkeletonLoader />;
+  }
 
   // Helper function to render rating stars
   const renderRating = (rating) => {
@@ -104,7 +111,7 @@ const Hotels = ({ trip }) => {
       </section>
 
       {/* Dining Section */}
-      <section className='space-y-6'>
+      <section className='space-y-8'>
         <h2 className="mt-8 text-3xl font-semibold text-gray-900">Restaurants</h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {trip.tripInfo?.dining.map((restaurant, index) => (

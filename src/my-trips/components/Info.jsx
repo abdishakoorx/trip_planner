@@ -7,13 +7,14 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Info as InfoIcon } from "lucide-react"
-import { GetPlacesInfo } from "@/config/GlobalApi";
+import { GetPlacesInfo, PHOTO_REF_URL } from "@/config/GlobalApi";
 import { useCallback, useEffect, useState } from "react";
+import InfoSkeletonLoader from "./InfoSkeletonLoader";
 
-const PHOTO_REF_URL = 'https://places.googleapis.com/v1/{NAME}/media?max_height_px=1000&&max_width_px=1000&key=' + import.meta.env.VITE_GOOGLE_PLACE_API_KEY
 
 function Info({ trip }) {
     const [photoURL, setphotoURL] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const getPlacePhotos = useCallback(async () => {
         if (!trip?.userSelection?.destination) return;
@@ -27,7 +28,7 @@ function Info({ trip }) {
         try {
             const result = await GetPlacesInfo(data);
             // console.log('Places API Response:', result.data.places[0].photos[3].name);
-            const Photo_URL = PHOTO_REF_URL.replace('{NAME}', result.data.places[0].photos[3].name)
+            const Photo_URL = PHOTO_REF_URL.replace('{NAME}', result.data.places[0].photos[5].name)
             setphotoURL(Photo_URL)
         } catch (error) {
             console.error('Error fetching place photos:', error);
@@ -38,17 +39,16 @@ function Info({ trip }) {
     }, [trip?.userSelection?.destination]);
 
     useEffect(() => {
+        setLoading(true);
         if (trip?.userSelection?.destination) {
-            getPlacePhotos();
+            getPlacePhotos().finally(() => {
+                setLoading(false);
+            });
         }
     }, [trip?.userSelection?.destination, getPlacePhotos]);
 
-    if (!trip) {
-        return (
-            <div className="flex items-center justify-center h-[360px]">
-                <p className="text-gray-600">Loading trip information...</p>
-            </div>
-        );
+    if (loading) {
+        return <InfoSkeletonLoader />;
     }
 
     const userSelection = trip?.userSelection || {};
@@ -132,7 +132,7 @@ function Info({ trip }) {
                 {tips.length > 0 && (
                     <div className="mt-8">
                         <h4 className="mb-4 text-lg font-semibold text-gray-900">Travel Tips</h4>
-                        <Accordion type="single" collapsible className="w-full">
+                        <Accordion type="single" collapsible className="w-full px-4 rounded-lg bg-gray-50">
                             <AccordionItem value="tips">
                                 <AccordionTrigger className="hover:no-underline">
                                     <div className="flex items-center gap-3 text-secondary">
@@ -145,7 +145,7 @@ function Info({ trip }) {
                                         {tips.map((tip, index) => (
                                             <li key={index} className="flex items-start gap-2">
                                                 <span className="flex-shrink-0 text-gray-600">•</span>
-                                                <span className="text-gray-600">{tip}</span>
+                                                <span className="text-gray-700">{tip}</span>
                                             </li>
                                         ))}
                                     </ul>

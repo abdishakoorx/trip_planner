@@ -8,7 +8,6 @@ import CreateTrip from './create-trip';
 import { Toaster } from './components/ui/sonner';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import MyTrips from './my-trips/[tripID]';
-import Footer from './components/custom/Footer';
 import History from './history';
 
 const router = createBrowserRouter([
@@ -36,7 +35,6 @@ createRoot(document.getElementById('root')).render(
       <Header />
       <RouterProvider router={router} />
       <Toaster position="bottom-center" />
-      <Footer/>
     </GoogleOAuthProvider>
   </StrictMode>
 )

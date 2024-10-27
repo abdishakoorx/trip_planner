@@ -74,7 +74,7 @@ function Header() {
 
 
   return (
-    <div className='flex items-center justify-between px-4 md:px-12 lg:px-16 py-4 bg-transparent'>
+    <div className='flex items-center justify-between px-4 py-4 bg-transparent md:px-12 lg:px-16'>
       {/* logo */}
       <div>
         <a href='/'>
@@ -86,15 +86,15 @@ function Header() {
         </a>
       </div>
       {/* buttons */}
-      <div className='flex gap-12 items-center'>
+      <div className='flex items-center gap-12'>
         {user ? (
-          <div className='flex gap-6 items-center'>
+          <div className='flex items-center gap-6'>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <a href='/create-trip'>
-                    <Button variant='ghost' className='bg-secondary/90 text-white hover:bg-secondary rounded-2xl'>
-                      <Plus />
+                    <Button variant='ghost' className='text-white bg-secondary/90 hover:bg-secondary rounded-2xl'>
+                      <Plus /> <p className='hidden md:block'>Create Trip</p>
                     </Button>
                   </a>
                 </TooltipTrigger>
@@ -108,8 +108,8 @@ function Header() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <a href='/history'>
-                    <Button variant='ghost' className='bg-orange-500/90 text-white hover:bg-orange-500 rounded-2xl'>
-                      <History />
+                    <Button variant='ghost' className='text-white bg-orange-500/90 hover:bg-orange-500 rounded-2xl'>
+                      <History />  <p className='hidden md:block'>History</p>
                     </Button>
                   </a>
                 </TooltipTrigger>
@@ -124,7 +124,7 @@ function Header() {
                 <img
                   src={user?.picture}
                   alt={user?.name}
-                  className="w-10 h-10 rounded-full object-cover border-2 border-gray-200"
+                  className="object-cover w-10 h-10 border-2 border-gray-200 rounded-full"
                   referrerPolicy="no-referrer"  // Important for Google profile images
                 />
               </DropdownMenuTrigger>

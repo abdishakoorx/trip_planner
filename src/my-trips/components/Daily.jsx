@@ -3,12 +3,14 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Bus, Car, Clock, DollarSign, MapPin } from 'lucide-react';
 import { useEffect, useState, useCallback } from 'react';
-import { GetPlacesInfo } from "@/config/GlobalApi";
+import { GetPlacesInfo, PHOTO_REF_URL } from "@/config/GlobalApi";
+import DailySkeletonLoader from "./DailySkeletonLoader";
 
-const PHOTO_REF_URL = 'https://places.googleapis.com/v1/{NAME}/media?max_height_px=1000&max_width_px=1000&key=' + import.meta.env.VITE_GOOGLE_PLACE_API_KEY;
+
 
 const Daily = ({ trip }) => {
   const [activityPhotos, setActivityPhotos] = useState({});
+  const [loading, setLoading] = useState(true)
 
   const getActivityPhoto = useCallback(async (activityName) => {
     const data = {
@@ -32,14 +34,25 @@ const Daily = ({ trip }) => {
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     if (trip?.tripInfo?.itinerary?.dayPlans) {
-      trip.tripInfo.itinerary.dayPlans.forEach(day => {
-        day.activities.forEach(activity => {
-          getActivityPhoto(activity.name);
-        });
-      });
+      const fetchAllPhotos = async () => {
+        const promises = trip.tripInfo.itinerary.dayPlans.flatMap(day =>
+          day.activities.map(activity => getActivityPhoto(activity.name))
+        );
+        await Promise.all(promises);
+        setLoading(false);
+      };
+      fetchAllPhotos();
     }
   }, [trip?.tripInfo?.itinerary?.dayPlans, getActivityPhoto]);
+
+
+  if (loading) {
+    return <DailySkeletonLoader />;
+  }
+
+
 
   return (
     <div className="space-y-8 border-t-2 border-blue-300">
