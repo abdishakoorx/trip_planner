@@ -1,17 +1,17 @@
-import { useEffect, useState } from 'react'
+// import { useEffect, useState } from 'react'
 import { Button } from '../ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu"
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuTrigger,
+// } from "../ui/dropdown-menu"
 import { History, Plus } from 'lucide-react'
-import { Dialog, DialogContent, DialogDescription, DialogHeader } from '../ui/dialog'
-import { DialogTitle } from '@radix-ui/react-dialog'
-import { toast } from 'sonner'
-import axios from 'axios'
-import { useGoogleLogin } from '@react-oauth/google'
+// import { Dialog, DialogContent, DialogDescription, DialogHeader } from '../ui/dialog'
+// import { DialogTitle } from '@radix-ui/react-dialog'
+// import { toast } from 'sonner'
+// import axios from 'axios'
+// import { useGoogleLogin } from '@react-oauth/google'
 import {
   Tooltip,
   TooltipContent,
@@ -21,56 +21,56 @@ import {
 
 
 function Header() {
-  const [user, setUser] = useState(null);
-  const [openDialog, setOpenDialog] = useState(false);
+  // const [user, setUser] = useState(null);
+  // const [openDialog, setOpenDialog] = useState(false);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
+  // useEffect(() => {
+  //   const storedUser = localStorage.getItem('user');
+  //   if (storedUser) {
+  //     setUser(JSON.parse(storedUser));
+  //   }
+  // }, []);
 
-  const login = useGoogleLogin({
-    onSuccess: (codeResponse) => {
-      GetUserProfile(codeResponse)
-        .catch(error => {
-          toast.error('Login failed. Please try again.', error);
-        });
-    },
-    onError: () => {
-      toast.error('Google login failed. Please try again.');
-    }
-  });
+  // const login = useGoogleLogin({
+  //   onSuccess: (codeResponse) => {
+  //     GetUserProfile(codeResponse)
+  //       .catch(error => {
+  //         toast.error('Login failed. Please try again.', error);
+  //       });
+  //   },
+  //   onError: () => {
+  //     toast.error('Google login failed. Please try again.');
+  //   }
+  // });
 
-  const GetUserProfile = async (tokenInfo) => {
-    try {
-      const response = await axios.get(
-        `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo.access_token}`,
-        {
-          headers: {
-            Authorization: `Bearer ${tokenInfo.access_token}`,
-            Accept: 'application/json'
-          }
-        }
-      );
+  // const GetUserProfile = async (tokenInfo) => {
+  //   try {
+  //     const response = await axios.get(
+  //       `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo.access_token}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${tokenInfo.access_token}`,
+  //           Accept: 'application/json'
+  //         }
+  //       }
+  //     );
 
-      // Store user data in localStorage
-      localStorage.setItem('user', JSON.stringify(response.data));
-      setUser(response.data);
+  //     // Store user data in localStorage
+  //     localStorage.setItem('user', JSON.stringify(response.data));
+  //     setUser(response.data);
 
-      // Close the dialog after successful login
-      setOpenDialog(false);
+  //     // Close the dialog after successful login
+  //     setOpenDialog(false);
 
-      // Show success message
-      toast.success('Successfully logged in!');
+  //     // Show success message
+  //     toast.success('Successfully logged in!');
 
-      return response.data;
-    } catch (error) {
-      toast.error('Failed to login. Please try again.');
-      throw error;
-    }
-  };
+  //     return response.data;
+  //   } catch (error) {
+  //     toast.error('Failed to login. Please try again.');
+  //     throw error;
+  //   }
+  // };
 
 
   return (
@@ -87,7 +87,7 @@ function Header() {
       </div>
       {/* buttons */}
       <div className='flex items-center gap-12'>
-        {user ? (
+        {/* {user ? ( */}
           <div className='flex items-center gap-6'>
             <TooltipProvider>
               <Tooltip>
@@ -119,7 +119,7 @@ function Header() {
               </Tooltip>
             </TooltipProvider>
 
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger>
                 <img
                   src={user?.picture}
@@ -139,15 +139,15 @@ function Header() {
                   Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
           </div>
-        ) : (
-          <Button onClick={() => setOpenDialog(true)}>Signup</Button>
-        )}
+        {/* ) : ( */}
+          {/* <Button onClick={() => setOpenDialog(true)}>Signup</Button> */}
+        {/* )} */}
       </div>
 
       {/* Sign In Dialog */}
-      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+      {/* <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
@@ -169,7 +169,7 @@ function Header() {
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </div>
   )
 }
