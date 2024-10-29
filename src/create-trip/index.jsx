@@ -10,21 +10,10 @@ import { RadioOptionCard } from '@/components/custom/RadioOptions';
 import { toast } from 'sonner';
 import { AIPROMPT } from '@/components/custom/Prompt';
 import { chatSession } from '@/config/CreatePrompt';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-} from "@/components/ui/dialog"
-import { DialogTitle } from '@radix-ui/react-dialog';
-import { useGoogleLogin } from '@react-oauth/google';
-import axios from 'axios';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '@/config/Firebase';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-
-
 
 const CreateTrip = () => {
   const [place, setPlace] = useState(null);
@@ -33,57 +22,13 @@ const CreateTrip = () => {
     days: '',
     tripType: '',
     budget: '',
-    size: ''
+    size: '',
+    email: '' // Added email field
   });
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
-
-  const router = useNavigate()
-
-  const login = useGoogleLogin({
-    onSuccess: (codeResponse) => {
-      GetUserProfile(codeResponse)
-        .catch(error => {
-          console.error('Login error:', error);
-          toast.error('Login failed. Please try again.');
-        });
-    },
-    onError: (error) => {
-      console.error('Google login error:', error);
-      toast.error('Google login failed. Please try again.');
-    }
-  });
-
-  const GetUserProfile = async (tokenInfo) => {
-    try {
-      const response = await axios.get(
-        `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo.access_token}`,
-        {
-          headers: {
-            Authorization: `Bearer ${tokenInfo.access_token}`,
-            Accept: 'application/json'
-          }
-        }
-      );
-
-      // Store user data in localStorage
-      localStorage.setItem('user', JSON.stringify(response.data));
-
-      // Close the dialog after successful login
-      setOpenDialog(false);
-
-      // Show success message
-      toast.success('Successfully logged in!');
-
-      return response.data;
-    } catch (error) {
-      console.error('Authentication error:', error);
-      toast.error('Failed to login. Please try again.');
-      throw error;
-    }
-  };
+  const router = useNavigate();
 
   const validateField = (name, value) => {
     const fieldSchema = tripSchema[name];
@@ -145,23 +90,7 @@ const CreateTrip = () => {
       return;
     }
 
-    const user = localStorage.getItem('user')
-
-    if (!user) {
-      setOpenDialog(true)
-      return
-    }
-
-
     try {
-      setFormData({
-        destination: '',
-        days: '',
-        tripType: '',
-        budget: '',
-        size: ''
-      });
-
       const FINAL_PROMPT = AIPROMPT
         .replace('{destination}', formData.destination)
         .replace('{days}', formData.days)
@@ -169,32 +98,31 @@ const CreateTrip = () => {
         .replace('{budget}', formData.budget)
         .replace('{size}', formData.size);
 
-      const result = await chatSession.sendMessage(FINAL_PROMPT)
-
+      const result = await chatSession.sendMessage(FINAL_PROMPT);
       const docID = uuidv4();
 
-      const SaveTrip = async (TripInfo, documentId) => {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const now = new Date();
-        const date = now.toLocaleString("en-US", { timeZone: "Africa/Nairobi" });
+      await setDoc(doc(db, "Trips", docID), {
+        userSelection: formData,
+        tripInfo: JSON.parse(result?.response?.text()),
+        userEmail: formData.email,
+        date: new Date().toLocaleString("en-US", { timeZone: "Africa/Nairobi" }),
+        id: docID
+      });
 
-        // Use the passed documentId instead of generating a new one
-        await setDoc(doc(db, "Trips", documentId), {
-          userSelection: formData,
-          tripInfo: JSON.parse(TripInfo),
-          userEmail: user?.email,
-          date: date,
-          id: documentId
-        });
-      }
-
-      await SaveTrip(result?.response?.text(), docID)
-      toast.success('Trip created')
+      toast.success('Trip created');
       router('/my-trips/' + docID);
 
+      setFormData({
+        destination: '',
+        days: '',
+        tripType: '',
+        budget: '',
+        size: '',
+        email: ''
+      });
       setPlace(null);
     } catch (error) {
-      toast.error('Submission error')
+      toast.error('Submission error');
       console.error('Submission error:', error);
     } finally {
       setIsSubmitting(false);
@@ -212,6 +140,25 @@ const CreateTrip = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Email Input */}
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="your@email.com"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+            {errors.email && (
+              <Alert variant="destructive">
+                <AlertDescription>{errors.email}</AlertDescription>
+              </Alert>
+            )}
+          </div>
+
           {/* Destination */}
           <div className="flex flex-col w-full space-y-2">
             <Label htmlFor="destination">Destination</Label>
@@ -322,29 +269,6 @@ const CreateTrip = () => {
           </Button>
         </form>
       </div>
-
-      <Dialog open={openDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              <img
-                src='/logo1.png'
-                alt='logo'
-                className='h-10 w-60'
-              /></DialogTitle>
-            <DialogDescription>
-              <Button className='w-full mt-8' onClick={login}>
-                <img src='/google.svg'
-                  alt='logo'
-                  className='w-6 h-6'
-                />
-                Continue with Google
-              </Button>
-            </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
-
     </div>
   );
 };
