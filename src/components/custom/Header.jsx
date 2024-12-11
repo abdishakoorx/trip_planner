@@ -44,7 +44,7 @@ function Header() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Link to='/history'>
-                    <Button variant='ghost' className='text-white bg-orange-500/90 hover:bg-orange-500 rounded-2xl'>
+                    <Button variant='ghost' className='text-black hover:text-black bg-orange-500/90 hover:bg-orange-500 rounded-2xl'>
                       <History />  <p className='hidden md:block'>History</p>
                     </Button>
                   </Link>
