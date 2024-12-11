@@ -6,6 +6,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { Link } from "react-router-dom"
 
 
 function Header() {
@@ -27,11 +28,11 @@ function Header() {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <a href='/create-trip'>
+                  <Link to='/create-trip'>
                     <Button variant='ghost' className='text-white bg-secondary/90 hover:bg-secondary rounded-2xl'>
                       <Plus /> <p className='hidden md:block'>Create Trip</p>
                     </Button>
-                  </a>
+                  </Link>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Create Trip</p>
@@ -42,11 +43,11 @@ function Header() {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <a href='/history'>
+                  <Link to='/history'>
                     <Button variant='ghost' className='text-white bg-orange-500/90 hover:bg-orange-500 rounded-2xl'>
                       <History />  <p className='hidden md:block'>History</p>
                     </Button>
-                  </a>
+                  </Link>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>View Trips</p>
