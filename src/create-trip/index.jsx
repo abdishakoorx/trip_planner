@@ -14,6 +14,7 @@ import { doc, setDoc } from 'firebase/firestore';
 import { db } from '@/config/Firebase';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import { useUser } from '@clerk/clerk-react';
 
 const CreateTrip = () => {
   const [place, setPlace] = useState(null);
@@ -23,12 +24,12 @@ const CreateTrip = () => {
     tripType: '',
     budget: '',
     size: '',
-    email: '' // Added email field
   });
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useNavigate();
+  const { user } = useUser()
 
   const validateField = (name, value) => {
     const fieldSchema = tripSchema[name];
@@ -78,18 +79,6 @@ const CreateTrip = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const newErrors = {};
-    Object.keys(formData).forEach(field => {
-      const error = validateField(field, formData[field]);
-      if (error) newErrors[field] = error;
-    });
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setIsSubmitting(false);
-      return;
-    }
-
     try {
       const FINAL_PROMPT = AIPROMPT
         .replace('{destination}', formData.destination)
@@ -104,23 +93,13 @@ const CreateTrip = () => {
       await setDoc(doc(db, "Trips", docID), {
         userSelection: formData,
         tripInfo: JSON.parse(result?.response?.text()),
-        userEmail: formData.email,
+        userEmail: user.primaryEmailAddress.emailAddress,
         date: new Date().toLocaleString("en-US", { timeZone: "Africa/Nairobi" }),
         id: docID
       });
 
       toast.success('Trip created');
       router('/my-trips/' + docID);
-
-      setFormData({
-        destination: '',
-        days: '',
-        tripType: '',
-        budget: '',
-        size: '',
-        email: ''
-      });
-      setPlace(null);
     } catch (error) {
       toast.error('Submission error');
       console.error('Submission error:', error);
@@ -140,24 +119,6 @@ const CreateTrip = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Email Input */}
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="your@email.com"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-            {errors.email && (
-              <Alert variant="destructive">
-                <AlertDescription>{errors.email}</AlertDescription>
-              </Alert>
-            )}
-          </div>
 
           {/* Destination */}
           <div className="flex flex-col w-full space-y-2">
