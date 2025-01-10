@@ -13,13 +13,13 @@ function Header() {
   return (
     <div className='flex items-center justify-between px-4 py-4 bg-transparent md:px-12 lg:px-16'>
       <div>
-        <a href='/'>
+        <Link to='/'>
           <img
             src='/logo.webp'
             alt='logo'
             className='h-8 md:h-10 w-30 md:w-45 lg:w-60'
           />
-        </a>
+        </Link>
       </div>
       <div className='flex items-center gap-12'>
         <SignedIn>
