@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { ClerkProvider } from '@clerk/clerk-react'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
@@ -8,12 +9,11 @@ import MyTrips from './my-trips/[tripID]';
 import History from './history';
 import { Layout } from './Provider';
 
-// Create a layout component that includes the Header
-
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
 const router = createBrowserRouter([
   {
-    element: <Layout />, 
+    element: <Layout />,
     children: [
       {
         path: "/",
@@ -37,6 +37,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+      <RouterProvider router={router} />
+    </ClerkProvider>
   </StrictMode>
 )
