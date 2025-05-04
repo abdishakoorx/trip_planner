@@ -53,8 +53,12 @@ function Header() {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Link to='/create-trip'>
-                        <Button variant='ghost' className='text-white bg-secondary/90 hover:bg-secondary rounded-2xl'>
-                          <Plus /> <p className='hidden md:block'>Create Trip</p>
+                        <Button
+                          variant={'outline'}
+                          className="flex items-center px-4 py-2 space-x-2 text-white transition-colors border-accent bg-accent"
+                        >
+                          <Plus className="w-4 h-4" />
+                          <span className="hidden md:inline">Create Trip</span>
                         </Button>
                       </Link>
                     </TooltipTrigger>
@@ -67,8 +71,16 @@ function Header() {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Link to='/history'>
-                        <Button variant='ghost' className='text-black hover:text-black bg-orange-500/90 hover:bg-orange-500 rounded-2xl'>
-                          <History /> <p className='hidden md:block'>History</p>
+                        <Button
+                          variant={'outline'}
+                          className={`flex items-center space-x-2 transition-colors
+                          ${isScrolled
+                              ? 'bg-transparent text-primary hover:text-primary'
+                              : 'bg-transparent text-white'} 
+                          px-4 py-2 hover:bg-transparent font-mono border-primary`}
+                        >
+                          <History className="w-4 h-4" />
+                          <span className="hidden md:inline">History</span>
                         </Button>
                       </Link>
                     </TooltipTrigger>
@@ -83,7 +95,14 @@ function Header() {
             <SignedOut>
               <div className="flex gap-4">
                 <SignInButton mode="modal">
-                  <Button variant={"outline"} className={`hidden md:flex items-center space-x-1 mr-6 bg-transparent ${isScrolled ? 'text-gray-700 hover:text-accent' : 'text-primary-foreground'} hover:bg-transparent transition-colors`}>
+                  <Button
+                    variant={"outline"}
+                    className={`hidden md:flex items-center space-x-1 mr-6 bg-transparent 
+                    ${isScrolled
+                        ? 'text-gray-700 hover:text-accent'
+                        : 'text-primary-foreground'}
+                      hover:bg-transparent transition-colors`}
+                  >
                     <User />
                     Sign In
                   </Button>
@@ -112,31 +131,65 @@ function Header() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden">
+        <div className="md:hidden fixed inset-x-0 top-[72px] backdrop-blur-sm border-b z-30">
           <div className="container px-4 py-6 mx-auto space-y-4">
             <SignedIn>
-              <Link to='/create-trip' className="flex items-center py-2 space-x-2 text-gray-700 hover:text-secondary">
-                <Plus className="w-5 h-5" />
-                <span className="font-medium">Create Trip</span>
-              </Link>
-              <Link to='/history' className="flex items-center py-2 space-x-2 text-gray-700 hover:text-orange-500">
-                <History className="w-5 h-5" />
-                <span className="font-medium">Trip History</span>
-              </Link>
-              <div className="py-2">
-                <UserButton />
+              <div className="flex flex-col gap-3">
+                <Link to='/create-trip' className="w-full">
+                  <Button
+                    variant={'outline'}
+                    className="flex items-center justify-center w-full gap-2 text-white transition-colors border-accent bg-accent hover:bg-accent/90"
+                  >
+                    <Plus className="w-5 h-5" />
+                    <span>Create Trip</span>
+                  </Button>
+                </Link>
+
+                <Link to='/history' className="w-full">
+                  <Button
+                    variant={'outline'}
+                    className={`w-full flex items-center justify-center gap-2 transition-colors
+                ${isScrolled
+                        ? 'bg-transparent text-primary hover:text-primary hover:bg-primary/10'
+                        : 'bg-transparent text-white hover:bg-white/10'} 
+                border-primary`}
+                  >
+                    <History className="w-5 h-5" />
+                    <span>History</span>
+                  </Button>
+                </Link>
+
+                <div className="flex items-center justify-center pt-2 pb-1">
+                  <UserButton
+                    appearance={{
+                      elements: {
+                        userButtonAvatarBox: "w-10 h-10",
+                        userButtonTrigger: "border border-primary/20 p-1 rounded-full hover:bg-primary/10"
+                      }
+                    }}
+                  />
+                </div>
               </div>
             </SignedIn>
+
             <SignedOut>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-3">
                 <SignInButton mode="modal">
-                  <Button variant={"outline"} className={`items-center space-x-1 bg-transparent ${isScrolled ? 'text-gray-700 hover:text-accent' : 'text-primary-foreground'} hover:bg-transparent transition-colors`}>
-                    <User />
-                    Sign In
+                  <Button
+                    variant={"outline"}
+                    className={`w-full flex items-center justify-center gap-2 bg-transparent 
+                ${isScrolled ? 'text-gray-700 hover:text-accent' : 'text-primary-foreground'} 
+                hover:bg-transparent/10 transition-colors`}
+                  >
+                    <User className="w-5 h-5" />
+                    <span>Sign In</span>
                   </Button>
                 </SignInButton>
+
                 <SignUpButton mode="modal">
-                  <Button className="btn-primary">Start Planning</Button>
+                  <Button className="flex items-center justify-center w-full btn-primary">
+                    Start Planning
+                  </Button>
                 </SignUpButton>
               </div>
             </SignedOut>
