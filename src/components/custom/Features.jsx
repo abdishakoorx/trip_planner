@@ -32,7 +32,7 @@ const Features = () => {
     ];
 
     return (
-        <section id="features" className="py-16 md:py-24 bg-gradient-to-b from-white to-gray-50">
+        <section id="features" className="py-16 md:py-24">
             <div className="container px-4 mx-auto">
                 {/* Section header */}
                 <div className="mb-16 text-center">
@@ -73,11 +73,11 @@ const Features = () => {
                         </div>
                         <div className="flex flex-col gap-4 sm:flex-row">
                             <Link to='/create-trip'>
-                                <Button variant={'ghost'} className="h-full underline whitespace-nowrap">
+                                <Button variant={'link'} className="text-base underline text-accent-foreground whitespace-nowrap">
                                     Start Planning
                                 </Button>
                             </Link>
-                            <Link to="/">
+                            <Link to="/about-us">
                                 <Button className="px-6 py-3 font-medium transition-all bg-transparent border rounded-md border-primary-foreground text-primary-foreground hover:bg-white/10 whitespace-nowrap">
                                     Learn More
                                 </Button>
