@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search, Calendar, MapPin } from 'lucide-react';
 import { Button } from '../ui/button';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
@@ -56,10 +57,12 @@ const Hero = () => {
                   className="w-full py-3 pl-10 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
-              <Button className="flex items-center justify-center h-full px-4 py-3 space-x-2 font-semibold transition-colors rounded-md bg-accent hover:bg-accent/90 text-accent-foreground">
-                <Search className="w-5 h-5" />
-                <span>Explore Now</span>
-              </Button>
+              <Link to='/create-trip'>
+                <Button  className="flex items-center justify-center h-full px-4 py-3 space-x-2 font-semibold transition-colors rounded-md bg-accent hover:bg-accent/90 text-accent-foreground">
+                  <Search className="w-5 h-5" />
+                  <span>Explore Now</span>
+                </Button>
+              </Link>
             </div>
           </div>
           
