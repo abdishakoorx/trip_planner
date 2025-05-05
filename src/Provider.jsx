@@ -37,7 +37,7 @@ export const useProtectedRoute = () => {
 
 export const Layout = () => {
   const location = useLocation();
-  const publicPaths = ['/'];
+  const publicPaths = ['/', '/about-us'];
   const isPublicPath = publicPaths.includes(location.pathname);
 
   return (
