@@ -1,5 +1,6 @@
-"use client"
 import { motion } from "framer-motion"
+import { ArrowLeft } from "lucide-react"
+import { Link } from "react-router-dom"
 
 export default function SignInPlaceholder() {
     return (
@@ -46,6 +47,16 @@ export default function SignInPlaceholder() {
                                     }}
                                 />
                             ))}
+                        </div>
+
+                        <div className="w-full mt-8">
+                            <Link
+                                to='/'
+                                className="flex items-center justify-center w-full gap-2 px-4 py-2 text-sm font-medium transition-all border border-transparent rounded-lg group bg-background/50 text-muted-foreground hover:bg-background/80 hover:text-foreground"
+                            >
+                                <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+                                Back to Home
+                            </Link>
                         </div>
                     </div>
                 </div>
