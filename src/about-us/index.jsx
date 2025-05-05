@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Compass, MapPin, Calendar, Clock, Award, MessageCircle, Star, Users } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
 import { Link } from 'react-router-dom';
 
 // Animation variants
@@ -407,22 +406,22 @@ const AboutUs = () => {
                             </p>
 
                             <div className="flex justify-center gap-4 pt-4 md:justify-start">
-                                <a
-                                    href="https://www.linkedin.com/in/abdishakoorx"
+                                <Link
+                                    to="https://www.linkedin.com/in/abdishakoorx"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="px-4 py-2 text-sm font-medium text-white transition rounded bg-primary hover:bg-primary/90"
                                 >
                                     LinkedIn
-                                </a>
-                                <a
-                                    href="https://abdishakoorx.vercel.app"
+                                </Link>
+                                <Link
+                                    to="https://abdishakoorx.vercel.app"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="px-4 py-2 text-sm font-medium transition border rounded text-primary border-primary hover:bg-primary hover:text-white"
                                 >
                                     Portfolio
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     </motion.div>

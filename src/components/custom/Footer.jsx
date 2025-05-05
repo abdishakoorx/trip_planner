@@ -1,6 +1,7 @@
 import React from 'react';
 import { Facebook, Compass } from 'lucide-react';
 import { InstagramLogoIcon, LinkedInLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   const year = new Date().getFullYear();
@@ -24,18 +25,18 @@ const Footer = () => {
               AI-powered travel planning for unforgettable adventures. Discover new destinations and create perfect itineraries.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="transition-colors hover:text-accent">
+              <Link to="#" className="transition-colors hover:text-accent">
                 <Facebook className="w-5 h-5" />
-              </a>
-              <a href="#" className="transition-colors hover:text-accent">
+              </Link>
+              <Link to="#" className="transition-colors hover:text-accent">
                 <TwitterLogoIcon className="w-5 h-5" />
-              </a>
-              <a href="#" className="transition-colors hover:text-accent">
+              </Link>
+              <Link to="#" className="transition-colors hover:text-accent">
                 <InstagramLogoIcon className="w-5 h-5" />
-              </a>
-              <a href="#" className="transition-colors hover:text-accent">
+              </Link>
+              <Link to="#" className="transition-colors hover:text-accent">
                 <LinkedInLogoIcon className="w-5 h-5" />
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -43,27 +44,27 @@ const Footer = () => {
           <div>
             <h3 className="mb-4 text-lg font-semibold">Discover</h3>
             <ul className="space-y-3">
-              <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Experiences</a></li>
-              <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Featured Trips</a></li>
-              <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Seasonal Offers</a></li>
+              <li><Link to="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Experiences</Link></li>
+              <li><Link to="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Featured Trips</Link></li>
+              <li><Link to="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Seasonal Offers</Link></li>
             </ul>
           </div>
 
           <div>
             <h3 className="mb-4 text-lg font-semibold">Company</h3>
             <ul className="space-y-3">
-              <li><a href="/about-us" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">About Us</a></li>
-              <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Press</a></li>
-              <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Contact Us</a></li>
+              <li><Link to="/about-us" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">About Us</Link></li>
+              <li><Link to="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Press</Link></li>
+              <li><Link to="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Contact Us</Link></li>
             </ul>
           </div>
 
           <div>
             <h3 className="mb-4 text-lg font-semibold">Support</h3>
             <ul className="space-y-3">
-              <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Help Center</a></li>
-              <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Terms of Service</a></li>
-              <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Trust & Safety</a></li>
+              <li><Link to="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Help Center</Link></li>
+              <li><Link to="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Terms of Service</Link></li>
+              <li><Link to="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Trust & Safety</Link></li>
             </ul>
           </div>
         </div>
