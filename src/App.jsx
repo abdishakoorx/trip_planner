@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import Footer from './components/custom/Footer'
 import Hero from './components/custom/Hero'
 import Features from './components/custom/Features'
 import Destinations from './components/custom/Destinations'
@@ -20,7 +19,6 @@ function App() {
       <Destinations />
       <Testimonials />
       <Newsletter />
-      <Footer />
     </div>
   )
 }
