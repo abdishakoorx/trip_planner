@@ -43,9 +43,7 @@ const Footer = () => {
           <div>
             <h3 className="mb-4 text-lg font-semibold">Discover</h3>
             <ul className="space-y-3">
-              <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Destinations</a></li>
               <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Experiences</a></li>
-              <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Travel Guides</a></li>
               <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Featured Trips</a></li>
               <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Seasonal Offers</a></li>
             </ul>
@@ -54,9 +52,7 @@ const Footer = () => {
           <div>
             <h3 className="mb-4 text-lg font-semibold">Company</h3>
             <ul className="space-y-3">
-              <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">About Us</a></li>
-              <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Our Team</a></li>
-              <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Careers</a></li>
+              <li><a href="/about-us" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">About Us</a></li>
               <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Press</a></li>
               <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Contact Us</a></li>
             </ul>
@@ -66,10 +62,8 @@ const Footer = () => {
             <h3 className="mb-4 text-lg font-semibold">Support</h3>
             <ul className="space-y-3">
               <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Help Center</a></li>
-              <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Privacy Policy</a></li>
               <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Terms of Service</a></li>
               <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Trust & Safety</a></li>
-              <li><a href="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Accessibility</a></li>
             </ul>
           </div>
         </div>
