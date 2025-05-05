@@ -4,7 +4,7 @@ import Hero from './components/custom/Hero'
 import Features from './components/custom/Features'
 import Destinations from './components/custom/Destinations'
 import Testimonials from './components/custom/Testimonials'
-import Newsletter from './components/custom/NewsLetter'
+import Newsletter from './components/custom/Newsletter'
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false)
