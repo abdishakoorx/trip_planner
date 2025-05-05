@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Compass, MapPin, Calendar, Clock, Award, MessageCircle, Star, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -36,10 +35,6 @@ const iconAnimation = {
     }
 };
 
-const cardHover = {
-    rest: { scale: 1, transition: { duration: 0.2 } },
-    hover: { scale: 1.03, transition: { duration: 0.2 } }
-};
 
 const AboutUs = () => {
     return (
@@ -115,7 +110,7 @@ const AboutUs = () => {
                                 artificial intelligence to create travel experiences that are not just trips, but journeys of discovery and connection.
                             </p>
                             <p className="mb-6 leading-relaxed text-gray-700">
-                                We're dedicated to making travel planning effortless and inspiring, giving you more time to focus on what truly matters –
+                                We&apos;re dedicated to making travel planning effortless and inspiring, giving you more time to focus on what truly matters –
                                 creating memories that last a lifetime. Our AI-powered platform learns from your preferences and adapts to craft the
                                 perfect itinerary tailored specifically to you.
                             </p>
@@ -161,7 +156,7 @@ const AboutUs = () => {
                                 whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
                             >
                                 <p className="font-serif italic text-accent-foreground">
-                                    "Not all who wander are lost, but all who use Greatertrips are found."
+                                &quot;Not all who wander are lost, but all who use Greatertrips are found.&quot;
                                 </p>
                             </motion.div>
                         </motion.div>
@@ -331,7 +326,7 @@ const AboutUs = () => {
                             </motion.div>
                             <h3 className="mb-2 text-lg font-semibold">Excellence</h3>
                             <p className="text-sm text-gray-600">
-                                We're committed to providing the highest quality travel recommendations.
+                                We&apos;re committed to providing the highest quality travel recommendations.
                             </p>
                         </motion.div>
 
