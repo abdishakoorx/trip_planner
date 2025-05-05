@@ -8,6 +8,7 @@ import CreateTrip from './create-trip';
 import MyTrips from './my-trips/[tripID]';
 import History from './history';
 import { Layout } from './Provider';
+import AboutUs from './about-us';
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
       { path: "/create-trip", element: <CreateTrip />, },
       { path: "/my-trips/:tripID", element: <MyTrips />, },
       { path: "/history", element: <History />, },
+      { path: "/about-us", element: <AboutUs />, },
     ]
   },
 ]);
