@@ -39,7 +39,7 @@ function Header() {
               <div className="flex items-center justify-center mr-2 rounded-full h-9 w-9 bg-primary">
                 <Compass className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className={`font-serif text-xl md:text-2xl font-semibold text-primary ${isScrolled ? '' : ''}`}>
+              <span className={`font-serif text-xl md:text-2xl font-semibold text-primary ${isScrolled ? '' : 'text-white'}`}>
                 Greatertrips
               </span>
             </Link>
