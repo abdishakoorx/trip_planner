@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Plane } from "lucide-react";
+import { Loader2, Plane, Calendar } from "lucide-react";
 import { tripSchema, tripTypeOptions, budgetOptions, sizeOptions } from '../utils/Validator';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import { RadioOptionCard } from '@/components/custom/RadioOptions';
@@ -15,6 +15,7 @@ import { db } from '@/config/Firebase';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { useUser } from '@clerk/clerk-react';
+import { format, addDays, isBefore } from 'date-fns';
 
 const CreateTrip = () => {
   const [place, setPlace] = useState(null);
@@ -24,12 +25,34 @@ const CreateTrip = () => {
     tripType: '',
     budget: '',
     size: '',
+    startDate: '',
   });
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useNavigate();
-  const { user } = useUser()
+  const { user } = useUser();
+
+  // Calculate minimum allowed date (today)
+  const today = new Date();
+  const formattedToday = format(today, 'yyyy-MM-dd');
+
+  // Calculate formatted end date string for display purposes
+  const calculateEndDateString = (startDate, days) => {
+    if (!startDate || !days) return '';
+    try {
+      const dateObj = new Date(startDate);
+      if (isNaN(dateObj.getTime())) return ''; // Check for invalid date
+
+      const endDate = addDays(dateObj, parseInt(days));
+      return format(endDate, 'yyyy-MM-dd');
+    } catch (error) {
+      console.error("Date calculation error:", error);
+      return '';
+    }
+  };
+
+  const endDateString = calculateEndDateString(formData.startDate, formData.days);
 
   const validateField = (name, value) => {
     const fieldSchema = tripSchema[name];
@@ -37,6 +60,16 @@ const CreateTrip = () => {
 
     if (fieldSchema.required && !value) {
       return fieldSchema.required;
+    }
+
+    if (name === 'startDate') {
+      const selectedDate = new Date(value);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Reset time to start of day for fair comparison
+
+      if (isBefore(selectedDate, today)) {
+        return 'Start date cannot be in the past';
+      }
     }
 
     if (fieldSchema.minLength && value.length < fieldSchema.minLength.value) {
@@ -77,6 +110,20 @@ const CreateTrip = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate all fields before submission
+    const newErrors = {};
+    Object.keys(formData).forEach(field => {
+      const error = validateField(field, formData[field]);
+      if (error) newErrors[field] = error;
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      toast.error('Please fix all errors before submitting');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -90,11 +137,26 @@ const CreateTrip = () => {
       const result = await chatSession.sendMessage(FINAL_PROMPT);
       const docID = uuidv4();
 
+      // Create proper JavaScript Date objects for start and end dates
+      const startDateObj = new Date(formData.startDate);
+
+      // Calculate end date as a proper Date object
+      const endDateObj = addDays(startDateObj, parseInt(formData.days));
+
+      // Current creation timestamp
+      const creationTimestamp = new Date();
+
       await setDoc(doc(db, "Trips", docID), {
-        userSelection: formData,
+        userSelection: {
+          ...formData,
+          // Store dates as timestamps for Firestore compatibility
+          startDate: startDateObj,
+          endDate: endDateObj
+        },
         tripInfo: JSON.parse(result?.response?.text()),
         userEmail: user.primaryEmailAddress.emailAddress,
-        date: new Date().toLocaleString("en-US", { timeZone: "Africa/Nairobi" }),
+        date: creationTimestamp,
+        status: 'upcoming', // Default status for new trips
         id: docID
       });
 
@@ -150,6 +212,33 @@ const CreateTrip = () => {
                     </Alert>
                   )}
                 </div>
+
+                {/* Start Date Field */}
+                <div className="space-y-2">
+                  <Label htmlFor="startDate" className="flex items-center gap-2">
+                    <Calendar size={16} /> Start Date
+                  </Label>
+                  <Input
+                    id="startDate"
+                    name="startDate"
+                    type="date"
+                    min={formattedToday}
+                    value={formData.startDate}
+                    onChange={handleChange}
+                    className="date-input"
+                  />
+                  {errors.startDate && (
+                    <Alert variant="destructive">
+                      <AlertDescription>{errors.startDate}</AlertDescription>
+                    </Alert>
+                  )}
+                  {formData.startDate && formData.days && (
+                    <div className="mt-2 text-sm text-muted-foreground">
+                      Trip ends on: <span className="font-medium text-primary">{endDateString}</span>
+                    </div>
+                  )}
+                </div>
+
                 {/* Days */}
                 <div className="space-y-2">
                   <Label htmlFor="days">Number of Days</Label>
@@ -169,6 +258,7 @@ const CreateTrip = () => {
                     </Alert>
                   )}
                 </div>
+
                 {/* Trip Type */}
                 <div className="space-y-4">
                   <Label>Trip Type</Label>
@@ -189,6 +279,7 @@ const CreateTrip = () => {
                     </Alert>
                   )}
                 </div>
+
                 {/* Budget */}
                 <div className="space-y-4">
                   <Label>Budget</Label>
@@ -209,6 +300,7 @@ const CreateTrip = () => {
                     </Alert>
                   )}
                 </div>
+
                 {/* Size */}
                 <div className="space-y-4">
                   <Label>Group Size</Label>
@@ -229,12 +321,16 @@ const CreateTrip = () => {
                     </Alert>
                   )}
                 </div>
+
                 <Button
                   type="submit"
                   className="w-full bg-secondary hover:bg-secondary"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? <h2 className='flex items-center gap-2'><Loader2 className='animate-spin' />Creating Trip...</h2> : <h2 className='flex items-center gap-2'><Plane className='animate-bounce' />Create Trip</h2>}
+                  {isSubmitting ?
+                    <h2 className='flex items-center gap-2'><Loader2 className='animate-spin' />Creating Trip...</h2> :
+                    <h2 className='flex items-center gap-2'><Plane className='animate-bounce' />Create Trip</h2>
+                  }
                 </Button>
               </form>
             </div>
