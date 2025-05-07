@@ -61,6 +61,11 @@ function Info({ trip }) {
                 src={photoURL || "/travel.jpg"}
                 alt="Placeholder"
                 className="w-full h-[400px] object-cover rounded-lg"
+                onError={(e) => {
+                    console.log("Image failed to load, using fallback");
+                    e.target.onerror = null; // Prevent infinite error loop
+                    e.target.src = "/travel.jpg"; // Set fallback image
+                }}
             />
 
             <div className="flex flex-col gap-2 mt-3 md:justify-between md:flex-row">
