@@ -4,7 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GetPlacesInfo, PHOTO_REF_URL } from "@/config/GlobalApi";
 
 // Skeleton component for loading state
@@ -82,6 +82,7 @@ const formatDate = (date) => {
 const TripCard = ({ trip }) => {
   const [photoURL, setPhotoURL] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // Determine trip status
   const status = trip.status || "default";
@@ -154,7 +155,7 @@ const TripCard = ({ trip }) => {
   }
 
   return (
-    <Link to={`/my-trips/${trip.id}`}>
+    <div onClick={() => navigate(`/my-trips/${trip.id}`)} className='cursor-pointer'>
       <Card className="overflow-hidden border-gray-100 hover-card">
         <div className="relative w-full h-48 overflow-hidden">
           <img
@@ -205,7 +206,7 @@ const TripCard = ({ trip }) => {
           </Link>
         </CardFooter>
       </Card>
-    </Link>
+    </div>
   );
 };
 
