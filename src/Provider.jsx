@@ -1,11 +1,11 @@
 import { Outlet, useLocation } from "react-router-dom";
 import Header from "./components/custom/Header";
 import { Toaster } from "./components/ui/sonner";
-import ProtectedRouteWithModal from "./components/auth/ProtectedRouteWithModal";
+import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
 
 export const Layout = () => {
   const location = useLocation();
-  const publicPaths = ['/', '/about-us'];
+  const publicPaths = ['/', '/about-us', "/contact-us"];
   const isPublicPath = publicPaths.includes(location.pathname);
 
   return (
@@ -14,9 +14,14 @@ export const Layout = () => {
       {isPublicPath ? (
         <Outlet />
       ) : (
-        <ProtectedRouteWithModal>
-          <Outlet />
-        </ProtectedRouteWithModal>
+        <>
+          <SignedIn>
+            <Outlet />
+          </SignedIn>
+          <SignedOut>
+            <RedirectToSignIn />
+          </SignedOut>
+        </>
       )}
       <Toaster position="bottom-center" richColors />
     </>
