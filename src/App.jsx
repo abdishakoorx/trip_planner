@@ -4,6 +4,7 @@ import Features from './components/custom/Features'
 import Destinations from './components/custom/Destinations'
 import Testimonials from './components/custom/Testimonials'
 import Newsletter from './components/custom/Newsletter'
+import Footer from './components/custom/Footer'
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -19,6 +20,7 @@ function App() {
       <Destinations />
       <Testimonials />
       <Newsletter />
+      <Footer />
     </div>
   )
 }
