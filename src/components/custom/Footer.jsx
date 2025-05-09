@@ -1,4 +1,3 @@
-import React from 'react';
 import { Facebook, Compass } from 'lucide-react';
 import { InstagramLogoIcon, LinkedInLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons';
 import { Link } from 'react-router-dom';
@@ -55,7 +54,7 @@ const Footer = () => {
             <ul className="space-y-3">
               <li><Link to="/about-us" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">About Us</Link></li>
               <li><Link to="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Press</Link></li>
-              <li><Link to="#" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Contact Us</Link></li>
+              <li><Link to="/contact-us" className="transition-colors text-primary-foreground/80 hover:text-accent-foreground">Contact Us</Link></li>
             </ul>
           </div>
 
