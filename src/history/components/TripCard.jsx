@@ -48,37 +48,6 @@ const statusColors = {
   default: "bg-gray-500"
 };
 
-// Function to format Firebase Timestamp or date string
-const formatDate = (date) => {
-  if (!date) return "Date not specified";
-
-  // Check if the date is a Firebase Timestamp (has seconds & nanoseconds properties)
-  if (date && typeof date === 'object' && 'seconds' in date) {
-    // Convert Firebase timestamp to JavaScript Date
-    return new Date(date.seconds * 1000).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  }
-
-  // If it's already a string, just return it
-  if (typeof date === 'string') {
-    return date;
-  }
-
-  // If it's a JavaScript Date object
-  if (date instanceof Date) {
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  }
-
-  return "Date format unknown";
-};
-
 const TripCard = ({ trip }) => {
   const [photoURL, setPhotoURL] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -191,10 +160,10 @@ const TripCard = ({ trip }) => {
               <MapPin className="w-4 h-4 mr-2 text-primary" />
               <span>{trip.userSelection?.destination || "Destination"}</span>
             </div>
-            <div className="flex items-center text-gray-600">
+            <p className="flex items-center text-sm text-gray-700">
               <Calendar className="w-4 h-4 mr-2 text-primary" />
-              <span>{formatDate(trip.date)}</span>
-            </div>
+              <span>{trip.userSelection?.startDate} → {trip.userSelection?.endDate}</span>
+            </p>
           </div>
         </CardContent>
         <CardFooter className="pt-4 pb-5">
