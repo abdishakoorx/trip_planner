@@ -19,7 +19,7 @@ export const Layout = () => {
           <Outlet />
         </ProtectedRouteWithModal>
       )}
-      <Toaster position="bottom-center" />
+      <Toaster position="bottom-center" richColors />
       <Footer />
     </>
   );
