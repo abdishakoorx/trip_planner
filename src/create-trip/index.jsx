@@ -143,19 +143,30 @@ const CreateTrip = () => {
       // Calculate end date as a proper Date object
       const endDateObj = addDays(startDateObj, parseInt(formData.days));
 
+      // Format dates as strings for storage
+      const formattedStartDate = format(startDateObj, "MMMM dd, yyyy");
+      const formattedEndDate = format(endDateObj, "MMMM dd, yyyy");
+
+      // Store simple date strings for easy lookup/sorting
+      const startDateSimple = format(startDateObj, "yyyy-MM-dd");
+      const endDateSimple = format(endDateObj, "yyyy-MM-dd");
+
       // Current creation timestamp
       const creationTimestamp = new Date();
 
       await setDoc(doc(db, "Trips", docID), {
         userSelection: {
           ...formData,
-          // Store dates as timestamps for Firestore compatibility
-          startDate: startDateObj,
-          endDate: endDateObj
+          // Store dates as formatted strings
+          startDate: formattedStartDate,
+          endDate: formattedEndDate,
+          // Also store simple date strings for easy sorting/filtering
+          startDateSimple: startDateSimple,
+          endDateSimple: endDateSimple
         },
         tripInfo: JSON.parse(result?.response?.text()),
         userEmail: user.primaryEmailAddress.emailAddress,
-        date: creationTimestamp,
+        date: creationTimestamp, // Keep this as timestamp for creation date
         status: 'upcoming', // Default status for new trips
         id: docID
       });
