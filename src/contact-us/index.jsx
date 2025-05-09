@@ -48,10 +48,10 @@ function ContactUs() {
             </div>
 
             {/* Contact Cards */}
-            <div className="container max-w-6xl px-4 mx-auto mt-8">
+            <div className="container max-w-6xl px-4 mx-auto mt-12">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                     {/* Email Card */}
-                    <Card className="overflow-hidden transition-all duration-300 border-none shadow-lg hover:shadow-xl">
+                    <Card className="overflow-hidden transition-all duration-300 border-t-0 shadow-none">
                         <CardContent className="p-0">
                             <div className="flex flex-col items-center p-6 text-center">
                                 <div className="flex items-center justify-center w-16 h-16 mb-4 text-blue-600 bg-blue-100 rounded-full">
@@ -67,7 +67,7 @@ function ContactUs() {
                     </Card>
 
                     {/* Phone Card */}
-                    <Card className="overflow-hidden transition-all duration-300 border-none shadow-lg hover:shadow-xl">
+                    <Card className="overflow-hidden transition-all duration-300 border-t-0 shadow-none">
                         <CardContent className="p-0">
                             <div className="flex flex-col items-center p-6 text-center">
                                 <div className="flex items-center justify-center w-16 h-16 mb-4 text-green-600 bg-green-100 rounded-full">
@@ -83,7 +83,7 @@ function ContactUs() {
                     </Card>
 
                     {/* Portfolio Card */}
-                    <Card className="overflow-hidden transition-all duration-300 border-none shadow-lg hover:shadow-xl">
+                    <Card className="overflow-hidden transition-all duration-300 border-t-0 shadow-none">
                         <CardContent className="p-0">
                             <div className="flex flex-col items-center p-6 text-center">
                                 <div className="flex items-center justify-center w-16 h-16 mb-4 text-blue-600 bg-blue-100 rounded-full">
