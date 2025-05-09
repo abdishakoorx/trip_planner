@@ -14,7 +14,7 @@ function History() {
   const { user, isLoaded } = useUser();
   const [trips, setTrips] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState({ status: 'all', dateRange: '' });
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const tripsPerPage = 6;
@@ -31,7 +31,41 @@ function History() {
         );
         const querySnapshot = await getDocs(q);
         const tripsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setTrips(tripsData);
+
+        // Check for completed trips based on end date
+        const processedTrips = tripsData.map(trip => {
+          // Clone the trip to avoid modifying the original data
+          const processedTrip = { ...trip };
+
+          // If status is not manually set to 'canceled', check dates
+          if (processedTrip.status !== 'canceled') {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Reset hours to compare dates only
+
+            // Convert string dates to Date objects for comparison
+            // Format expected: "YYYY-MM-DD"
+            const endDateParts = (processedTrip.userSelection?.endDateSimple || '').split('-');
+
+            if (endDateParts.length === 3) {
+              const endDate = new Date(
+                parseInt(endDateParts[0]),
+                parseInt(endDateParts[1]) - 1, // Month is 0-indexed
+                parseInt(endDateParts[2])
+              );
+
+              // If end date is before today, mark as completed
+              if (endDate < today) {
+                processedTrip.status = 'completed';
+              } else {
+                processedTrip.status = 'upcoming';
+              }
+            }
+          }
+
+          return processedTrip;
+        });
+
+        setTrips(processedTrips);
       } catch (error) {
         console.error("Error fetching trips:", error);
       } finally {
@@ -43,21 +77,72 @@ function History() {
   }, [user, isLoaded]);
 
   // Apply filters to trips
-  const filteredTrips = trips.filter(trip => {
-    // Skip status filter for now as mentioned in requirements
-    // Status filtering will be implemented later
+  const getFilteredTrips = () => {
+    return trips.filter(trip => {
+      // Apply status filter
+      if (filter.status !== 'all' && trip.status !== filter.status) {
+        return false;
+      }
 
-    // Apply search filter
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      return (
-        (trip.userSelection?.destination?.toLowerCase().includes(query)) ||
-        (trip.title?.toLowerCase().includes(query))
-      );
-    }
+      // Apply date range filter if selected
+      if (filter.dateRange) {
+        const today = new Date();
+        const startDateParts = (trip.userSelection?.startDateSimple || '').split('-');
 
-    return true;
-  });
+        if (startDateParts.length === 3) {
+          const startDate = new Date(
+            parseInt(startDateParts[0]),
+            parseInt(startDateParts[1]) - 1, // Month is 0-indexed
+            parseInt(startDateParts[2])
+          );
+
+          // Calculate the date range
+          const oneMonthAgo = new Date(today);
+          oneMonthAgo.setMonth(today.getMonth() - 1);
+
+          const threeMonthsAgo = new Date(today);
+          threeMonthsAgo.setMonth(today.getMonth() - 3);
+
+          const sixMonthsAgo = new Date(today);
+          sixMonthsAgo.setMonth(today.getMonth() - 6);
+
+          const oneYearAgo = new Date(today);
+          oneYearAgo.setFullYear(today.getFullYear() - 1);
+
+          // Check if the trip falls within the selected date range
+          switch (filter.dateRange) {
+            case 'last-month':
+              if (startDate < oneMonthAgo) return false;
+              break;
+            case 'last-3-months':
+              if (startDate < threeMonthsAgo) return false;
+              break;
+            case 'last-6-months':
+              if (startDate < sixMonthsAgo) return false;
+              break;
+            case 'last-year':
+              if (startDate < oneYearAgo) return false;
+              break;
+            default:
+              break;
+          }
+        }
+      }
+
+      // Apply search filter
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        return (
+          (trip.userSelection?.destination?.toLowerCase().includes(query)) ||
+          (trip.title?.toLowerCase().includes(query))
+        );
+      }
+
+      return true;
+    });
+  };
+
+  const filteredTrips = getFilteredTrips();
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredTrips.length / tripsPerPage);
@@ -68,6 +153,11 @@ function History() {
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+    setCurrentPage(1); // Reset to first page when filter changes
   };
 
   if (!isLoaded || isLoading) {
@@ -82,17 +172,17 @@ function History() {
   }
 
   return (
-    <>
+    <div className="mb-16">
       {/* Hero section */}
       <div className="relative">
         <div className="absolute inset-0 z-0 h-[240px]">
           <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-slate-50"></div>
           <div className="absolute inset-0 bg-gradient-to-r from-blue-900/40 to-indigo-900/30 mix-blend-overlay"></div>
         </div>
-        <div className="relative z-10 pt-32 pb-16">
+        <div className="relative z-10 pt-32 pb-4">
           <div className="container max-w-4xl px-4 mx-auto">
             <div className="mb-12 text-center">
-              <h1 className="mb-4 font-serif text-4xl font-semibold md:text-5xl text-primary">
+              <h1 className="mb-4 font-serif text-4xl font-semibold text-primary md:text-5xl">
                 Your Trip History
               </h1>
               <p className="max-w-2xl mx-auto text-lg text-primary/80">
@@ -107,7 +197,7 @@ function History() {
       <div className="container px-4 mx-auto md:px-6">
         {/* TripFilter component */}
         <TripFilter
-          onFilterChange={setFilter}
+          onFilterChange={handleFilterChange}
           onSearchChange={setSearchQuery}
         />
 
@@ -136,8 +226,8 @@ function History() {
             </div>
             <h3 className="mb-4 font-serif text-2xl font-medium">No trips found</h3>
             <p className="max-w-md mx-auto mb-8 text-gray-600">
-              {filter !== 'all'
-                ? `You don't have any ${filter} trips yet.`
+              {filter.status !== 'all'
+                ? `You don't have any ${filter.status} trips yet.`
                 : 'Your journey begins with a single step. Start planning your first adventure!'}
             </p>
             <Link to="/create-trip">
@@ -149,7 +239,7 @@ function History() {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
 
